@@ -13,6 +13,7 @@ class Takeoff{
         ros::Subscriber msg_sub_pose;
         bool mutex_lock = false;
         float current_altitude = 0;
+        float desired_height = 2.0;
     public:
         bt::Condition condition_takeoff;
         Takeoff();
@@ -37,7 +38,7 @@ void Takeoff :: stateCallback(const mavros_msgs::State::ConstPtr& msg){
         return;
     }else{
         mutex_lock = false;
-        if(msg->mode == "AUTO.TAKEOFF" || current_altitude > 0.1){
+        if(msg->mode == "AUTO.TAKEOFF" || current_altitude > desired_height){
             ROS_INFO("Takeoff success");
             conditionSet(true);
         }else{
