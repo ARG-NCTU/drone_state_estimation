@@ -130,13 +130,15 @@ add_executable(state_arm src/state_arm.cpp)
 add_executable(state_takeoff src/state_takeoff.cpp)
 add_executable(state_landed src/state_landed.cpp)
 add_executable(state_reach_area src/state_reach_area.cpp)
-add_executable(state_square_area src/state_square_area.cpp)
+add_executable(state_reach_height src/state_reach_height.cpp)
+add_executable(state_tsp src/state_tsp.cpp)
 
 target_link_libraries(state_arm ${catkin_LIBRARIES})
 target_link_libraries(state_takeoff ${catkin_LIBRARIES})
 target_link_libraries(state_landed ${catkin_LIBRARIES})
 target_link_libraries(state_reach_area ${catkin_LIBRARIES})
-target_link_libraries(state_square_area ${catkin_LIBRARIES})
+target_link_libraries(state_reach_height ${catkin_LIBRARIES})
+target_link_libraries(state_tsp ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/drone_state_estimation.cpp

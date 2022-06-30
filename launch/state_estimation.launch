@@ -1,7 +1,9 @@
 <launch>
+    <param name="drone/desired_height" value="12"/>
     <node name="state_arm" pkg="drone_state_estimation" type="state_arm"/>
     <node name="state_landed" pkg="drone_state_estimation" type="state_landed"/>
     <node name="state_reach_area" pkg="drone_state_estimation" type="state_reach_area"/>
     <node name="state_square_area" pkg="drone_state_estimation" type="state_square_area"/>
     <node name="state_takeoff" pkg="drone_state_estimation" type="state_takeoff"/>
+    <node name="state_tsp" pkg="drone_state_estimation" type="state_tsp"/>
 </launch>
