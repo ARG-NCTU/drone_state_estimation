@@ -21,7 +21,7 @@ class Land{
         void positionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
 };
 
-Land :: Land() : condition_land("Landed"){
+Land :: Land() : condition_land("state_land"){
     msg_sub_state = n.subscribe("mavros/state", 1,  &Land::stateCallback, this);
     msg_sub_pose = n.subscribe("mavros/local_position/pose", 1,  &Land::positionCallback, this);
 }
@@ -33,19 +33,14 @@ void Land :: conditionSet(bool state){
 }
 
 void Land :: stateCallback(const mavros_msgs::State::ConstPtr& msg){
-    if(mutex_lock == false){
-        return;
+    if(msg->mode == "AUTO.LAND"){
+        ROS_INFO("Land success");
+        conditionSet(true);
     }else{
-        mutex_lock = false;
-        if(msg->mode == "AUTO.LAND" || current_altitude < 0.1){
-            ROS_INFO("Land success");
-            conditionSet(true);
-        }else{
-            ROS_INFO("Land failed");
-            conditionSet(false);
-        }
-        return;
+        ROS_INFO("Land failed");
+        conditionSet(false);
     }
+    return;
 }
 
 void Land :: positionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg){
