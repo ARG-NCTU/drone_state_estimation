@@ -16,7 +16,7 @@ class Arm{
         void stateCallback(const mavros_msgs::State::ConstPtr& msg);
 };
 
-Arm :: Arm() : condition_arm("Is Armed"){
+Arm :: Arm() : condition_arm("state_arm"){
     msg_sub_state = n.subscribe("mavros/state", 1,  &Arm::stateCallback, this);
 }
 
