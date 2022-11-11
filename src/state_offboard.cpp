@@ -6,60 +6,44 @@
 #include <behavior_tree/behavior_tree.h>
 using namespace std; 
 
-class Land{
+class Offboard{
     private:
         ros::NodeHandle n;
         ros::Subscriber msg_sub_state;
         bool mutex_lock = false;
         float current_altitude = 0;
     public:
-        bt::Condition condition_land;
-        Land();
+        bt::Condition condition;
+        Offboard();
         void conditionSet(bool state);
         void stateCallback(const mavros_msgs::State::ConstPtr& msg);
         void positionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
 };
 
-Land :: Land() : condition_land("state_offboard"){
-    msg_sub_state = n.subscribe("mavros/state", 1,  &Land::stateCallback, this);
+Offboard :: Offboard() : condition("state_offboard"){
+    msg_sub_state = n.subscribe("mavros/state", 1,  &Offboard::stateCallback, this);
 }
 
-void Land :: conditionSet(bool state){
-    condition_land.set(state);
-    condition_land.publish();
+void Offboard :: conditionSet(bool state){
+    condition.set(state);
+    condition.publish();
     return;
 }
 
-void Land :: stateCallback(const mavros_msgs::State::ConstPtr& msg){
-    if(mutex_lock == false){
-        return;
+void Offboard :: stateCallback(const mavros_msgs::State::ConstPtr& msg){
+    if(msg->mode == "OFFBOARD" || current_altitude < 0.1){
+        ROS_INFO("Offboard success");
+        conditionSet(true);
     }else{
-        mutex_lock = false;
-        if(msg->mode == "OFFBOARD" || current_altitude < 0.1){
-            ROS_INFO("Land success");
-            conditionSet(true);
-        }else{
-            ROS_INFO("Land failed");
-            conditionSet(false);
-        }
-        return;
+        ROS_INFO("Offboard failed");
+        conditionSet(false);
     }
+    return;
 }
-
-void Land :: positionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg){
-    if(mutex_lock == false){
-        mutex_lock = true;
-        current_altitude = msg->pose.position.z;
-        return;
-    }else{
-        return;
-    }
-}
-
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "state_offboard");
-    Land state_land;
+    Offboard state_offboard;
     ros::spin();
     return 0;
 }
