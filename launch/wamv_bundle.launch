@@ -1,0 +1,24 @@
+<launch>
+    <!-- node_name equal to name in behavior tree -->
+    <arg name="node_name" default="nav_ee"/>
+
+    <!-- script contains one waypoint -->
+    <arg name="script_file" default="$(arg node_name)_waypoint.yaml"/>
+
+    <node pkg="drone_state_estimation" type="wamv_nav_action" name="$(arg node_name)_action" clear_params="true" output="screen">
+        <rosparam file="$(find drone_state_estimation)/config/$(arg script_file)"/>
+    </node>
+
+    <node pkg="drone_state_estimation" type="wamv_nav_condition" name="$(arg node_name)_condition" clear_params="true" output="screen">
+        <rosparam file="$(find drone_state_estimation)/config/$(arg script_file)"/>
+    </node>
+
+    <node pkg="behavior_tree_extra" type="signal_step_buffer" name="$(arg node_name)_finished" clear_params="true" output="screen">
+        <remap from="waypoint/state" to="$(arg node_name)_condition_success"/>
+        <remap from="state_manager/reset" to="state_manager/reset_$(arg node_name)"/>
+    </node>
+
+    <node pkg="behavior_tree_extra" type="buffer_reset" name="$(arg node_name)_reset" clear_params="true" output="screen">
+        <remap from="state_manager/reset" to="state_manager/reset_$(arg node_name)"/>
+    </node>
+</launch>
