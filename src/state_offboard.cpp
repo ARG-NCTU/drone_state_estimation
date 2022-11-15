@@ -31,7 +31,7 @@ void Offboard :: conditionSet(bool state){
 }
 
 void Offboard :: stateCallback(const mavros_msgs::State::ConstPtr& msg){
-    if(msg->mode == "OFFBOARD" || current_altitude < 0.1){
+    if(msg->mode == "OFFBOARD"){
         ROS_INFO("Offboard success");
         conditionSet(true);
     }else{

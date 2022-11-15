@@ -1,7 +1,14 @@
 <launch>
     <!-- <param name="drone/desired_height" value="12"/> -->
-    <node name="state_arm" pkg="drone_state_estimation" type="state_arm"/>
-    <node name="state_landed" pkg="drone_state_estimation" type="state_landed"/>
+    <node pkg="drone_state_estimation" type="state_arm" name="state_arm"/>
+    <node pkg="drone_state_estimation" type="state_offboard" name="state_offboard"/>
+    <node pkg="drone_state_estimation" type="state_land" name="state_land"/>
+    <node pkg="drone_state_estimation" type="state_tag_land" name="state_tag_land" clear_params="true" output="screen">
+        <param name="landing_height" value="1.5"/>
+    </node>
+    <node pkg="drone_state_estimation" type="state_power" name="state_power" clear_params="true" output="screen">
+        <param name="warning_voltage" value="22.8"/>
+    </node>
     <!-- <node name="state_reach_area" pkg="drone_state_estimation" type="state_reach_area"/>
     <node name="state_square_area" pkg="drone_state_estimation" type="state_square_area"/>
     <node name="state_takeoff" pkg="drone_state_estimation" type="state_takeoff"/>
